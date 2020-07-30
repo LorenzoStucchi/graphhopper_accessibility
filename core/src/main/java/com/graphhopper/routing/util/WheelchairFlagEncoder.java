@@ -70,11 +70,14 @@ public class WheelchairFlagEncoder extends FootFlagEncoder {
 
         safeHighwayTags.add("footway");
         safeHighwayTags.add("pedestrian");
-        safeHighwayTags.add("living_street");
-        safeHighwayTags.add("residential");
-        safeHighwayTags.add("service");
+        //safeHighwayTags.add("living_street");
+        //safeHighwayTags.add("residential");
+        //safeHighwayTags.add("service");
         safeHighwayTags.add("platform");
 
+        excludeHighwayTags.add("living_street");
+        excludeHighwayTags.add("residential");
+        excludeHighwayTags.add("service");
         excludeHighwayTags.add("trunk");
         excludeHighwayTags.add("trunk_link");
         excludeHighwayTags.add("primary");
@@ -89,6 +92,7 @@ public class WheelchairFlagEncoder extends FootFlagEncoder {
         excludeSurfaces.add("cobblestone");
         excludeSurfaces.add("gravel");
         excludeSurfaces.add("sand");
+        excludeSurfaces.add("sett");
 
         excludeSmoothness.add("bad");
         excludeSmoothness.add("very_bad");
@@ -98,8 +102,8 @@ public class WheelchairFlagEncoder extends FootFlagEncoder {
 
         allowedHighwayTags.addAll(safeHighwayTags);
         allowedHighwayTags.add("cycleway");
-        allowedHighwayTags.add("unclassified");
-        allowedHighwayTags.add("road");
+        //allowedHighwayTags.add("unclassified");
+        //allowedHighwayTags.add("road");
 
         maxPossibleSpeed = FERRY_SPEED;
         speedDefault = MEAN_SPEED;
@@ -171,8 +175,16 @@ public class WheelchairFlagEncoder extends FootFlagEncoder {
             return EncodingManager.Access.CAN_SKIP;
         }
 
+        if (way.hasTag("kerb", "lowered")) {
+            return EncodingManager.Access.CAN_SKIP;
+        }
+
+        if (way.hasTag("obstacle:wheelchiar", "yes")) {
+            return EncodingManager.Access.CAN_SKIP;
+        }
+
         if (way.hasTag("kerb")) {
-            String tagValue = way.getTag("kerb");
+            String tagValue = way.getTag("kerb:height");
             if (tagValue.endsWith("cm") || tagValue.endsWith("mm")) {
                 try {
                     float kerbHeight = Float.parseFloat(tagValue.substring(0, tagValue.length() - 2));
