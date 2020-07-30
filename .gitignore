@@ -1,8 +1,9 @@
 target/
 *~
+#.osm
 *-gh/
 nbactions*.xml
-/config.yml
+#/config.yml
 build.xml
 queries.sh
 maven/
